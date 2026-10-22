@@ -1,252 +1,136 @@
-<div align="center">
+# Neon Obsidian Portfolio
 
-```
-╔══════════════════════════════════════════════════════╗
-║                                                      ║
-║          S R U N   S O C H E T T R A                 ║
-║          ─────────────────────────                   ║
-║          P O R T F O L I O                           ║
-║                                                      ║
-║          full-stack  ·  engineered  ·  deployed      ║
-║                                                      ║
-╚══════════════════════════════════════════════════════╝
-```
+**A database-backed developer portfolio with a terminal-inspired React interface.**
 
-[![CI Pipeline](https://github.com/SRUN-Sochettra/Portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/SRUN-Sochettra/Portfolio/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-00ff41.svg?style=flat-square)](./LICENSE)
-[![Version](https://img.shields.io/badge/version-0.1.0-00d4ff.svg?style=flat-square)](#)
-[![Java](https://img.shields.io/badge/Java-21-ed8b00.svg?style=flat-square&logo=openjdk&logoColor=white)](https://openjdk.org/)
-[![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.2-6db33f.svg?style=flat-square&logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
-[![React](https://img.shields.io/badge/React-19-61dafb.svg?style=flat-square&logo=react&logoColor=black)](https://react.dev/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169e1.svg?style=flat-square&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+A full-stack portfolio experiment by Srun Sochettra, combining a dark cyan-accented frontend with a Java REST API and PostgreSQL. Profile, project and skill records come from the database; the contact form stores visitor messages through the backend.
 
-</div>
+This React/Vite and Spring Boot project is separate from the Next.js portfolio and the egg-themed portfolio. No current live deployment is claimed here.
 
----
+![Original portfolio cover](https://github.com/user-attachments/assets/55bc2a27-be87-45cb-86f5-b925fba6acf1)
 
-## `> SYSTEM.overview`
+The existing cover link is retained; its contents and availability were not checked during this refresh.
 
-Personal full-stack portfolio of **Srun Sochettra**. Engineered with Java Spring Boot, React, and PostgreSQL. Features a dark-mode glassmorphism UI, a production-grade REST API, and a serverless database layer.
-<img width="1536" height="1024" alt="portfolioCover" src="https://github.com/user-attachments/assets/55bc2a27-be87-45cb-86f5-b925fba6acf1" />
+## What is implemented
 
+- A terminal-style hero with typewriter text and pointer-driven tilt.
+- About, grouped skills and ordered project sections populated through API requests.
+- Project technology badges with a backend converter for several stored text/JSON formats.
+- A contact form with pending/error states and database persistence.
+- Server-side contact validation and structured responses for invalid fields or malformed JSON.
+- Backend controller, service and converter tests, plus build-oriented CI configuration.
 
----
+Project cards link to the contact section rather than individual live demos. Contact success means the API saved a record, not that an email was delivered or read. There is no supplied message inbox, admin editor or notification service.
 
-## `> ARCH.system_architecture`
+## Architecture
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                          C L I E N T                                │
-│  ┌───────────────────────────────────────────────────────────────┐  │
-│  │  React 19  ·  TypeScript  ·  Vite 7  ·  Tailwind CSS v4       │  │
-│  │  Framer Motion  ·  Lucide Icons  ·  React Router v7           │  │
-│  └──────────────────────────┬────────────────────────────────────┘  │
-│                             │ HTTPS / JSON                          │
-│                             ▼                                       │
-│  ┌───────────────────────────────────────────────────────────────┐  │
-│  │                    S E R V E R                                │  │
-│  │  ┌─────────────────────────────────────────────────────────┐  │  │
-│  │  │  Spring Boot 3.2  ·  Java 21  ·  Spring MVC             │  │  │
-│  │  │  Spring Data JPA  ·  Lombok  ·  Jakarta Validation      │  │  │
-│  │  │  OpenAPI / Swagger UI  ·  Global Exception Handler      │  │  │
-│  │  └────────────────────────┬────────────────────────────────┘  │  │
-│  │                           │ JDBC / HikariCP                   │  │
-│  │                           ▼                                   │  │
-│  │  ┌─────────────────────────────────────────────────────────┐  │  │
-│  │  │  PostgreSQL 16  (Neon Serverless / Local Docker)        │  │  │
-│  │  │  Tables: profiles · projects · skills · contact_messages│  │  │
-│  │  └─────────────────────────────────────────────────────────┘  │  │
-│  └───────────────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────────────┘
+```text
+React + TypeScript + Vite
+          |
+     HTTP / JSON
+          |
+Spring MVC controllers -> services -> JPA repositories
+                                      |
+                                  PostgreSQL
 ```
 
-**Data Flow:**
-```
-[Browser] ──GET/POST──▶ [React SPA] ──fetch()──▶ [Spring Boot REST API]
-                                                         │
-                                                         ▼
-                                                 [Service Layer]
-                                                         │
-                                                         ▼
-                                                [JPA Repository] ──▶ [PostgreSQL]
-```
+| Layer | Source configuration |
+| --- | --- |
+| Frontend | React ^19.2.0, Vite ^7.3.1, TypeScript ~5.9.3 |
+| Styling | Tailwind CSS ^4.2.1, Framer Motion ^12.35.0 |
+| Backend | Java 21, Spring Boot 3.2.4, JPA and Jakarta Validation |
+| API documentation | Springdoc 2.5.0 dependency and controller annotations |
+| Local database | PostgreSQL 15 Alpine in Docker Compose |
 
----
+These are declared versions, not a freshly installed or tested environment. The old PostgreSQL 16 badge did not match the supplied Compose image.
 
-## `> API.endpoints`
+## Local setup
 
-All endpoints are prefixed with `/api`. Interactive documentation is available via **Swagger UI** at `/swagger-ui.html` when the backend is running.
+The following is a suggested sequence derived from the supplied configuration, not an executed installation. Use Java 21, Maven, Docker Compose and Node.js compatible with the frontend dependencies. No Maven wrapper or npm lockfile is included in this export.
 
-| Method | Endpoint                | Description                                 | Status Codes  |
-|--------|-------------------------|---------------------------------------------|---------------|
-| `GET`  | `/api/profile`          | Retrieve portfolio owner's profile          | `200` · `404` |
-| `GET`  | `/api/projects`         | List all projects (sorted by display order) | `200`         |
-| `GET`  | `/api/skills`           | List all skills (sorted by display order)   | `200`         |
-| `POST` | `/api/contact_messages` | Submit a visitor contact message            | `201` · `400` |
+### 1. Start the local database
 
-**Request Example — Submit Contact Message:**
-```json
-POST /api/contact_messages
-Content-Type: application/json
+From the repository root:
 
-{
-  "name": "Jane Doe",
-  "email": "jane@example.com",
-  "message": "Great portfolio! Let's connect."
-}
+```sh
+docker compose up -d
 ```
 
----
+The supplied Compose file starts PostgreSQL only, exposes port 5432 and uses development credentials. It does not start the frontend/backend. Keep it local and do not reuse its credentials for a public deployment.
 
-## `> DIR.project_structure`
+### 2. Configure and start the backend
 
-```
-Portfolio/
-├── .github/
-│   ├── ISSUE_TEMPLATE/
-│   │   ├── bug_report.md
-│   │   └── feature_request.md
-│   ├── PULL_REQUEST_TEMPLATE.md
-│   └── workflows/
-│       └── ci.yml
-├── backend/
-│   ├── src/main/java/com/portfolio/
-│   │   ├── config/          # CORS configuration
-│   │   ├── controller/      # REST API controllers
-│   │   ├── exception/       # Global exception handler
-│   │   ├── model/           # JPA entities
-│   │   ├── repository/      # Spring Data repositories
-│   │   └── service/         # Business logic layer
-│   ├── Dockerfile
-│   └── pom.xml
-├── frontend/
-│   ├── src/                 # React components & pages
-│   ├── public/              # Static assets
-│   ├── index.html
-│   ├── vite.config.ts
-│   └── package.json
-├── docker-compose.yml       # Local PostgreSQL
-├── CONTRIBUTING.md
-├── LICENSE                  # MIT
-└── README.md
+In PowerShell, from the repository root:
+
+```powershell
+$env:DATABASE_URL = 'jdbc:postgresql://localhost:5432/portfolio'
+$env:DATABASE_USERNAME = 'postgres'
+$env:DATABASE_PASSWORD = 'postgres'
+$env:ALLOWED_ORIGINS = 'http://localhost:5173'
+Set-Location backend
+mvn spring-boot:run
 ```
 
----
+The values above match the local Compose example only. Use private environment configuration for other databases. Spring reads process environment variables; merely copying the root .env.example to .env does not supply them to this Maven command.
 
-## `> SETUP.local_development`
+Startup enables SQL initialisation and Hibernate schema updates. Use an isolated database: schema.sql creates tables and data.sql inserts sample profile/skill/project rows. Existing matching IDs are left unchanged. This is not a versioned migration or a safe production schema-change plan.
 
-### Prerequisites
+### 3. Start the frontend
 
-| Tool    | Version | Purpose            |
-|---------|---------|--------------------|
-| Java    | 21+     | Backend runtime    |
-| Node.js | 20+     | Frontend toolchain |
-| Docker  | Latest  | Local PostgreSQL   |
+In another PowerShell terminal, from the repository root:
 
-### 1. Clone & Configure
-
-```bash
-git clone https://github.com/SRUN-Sochettra/Portfolio.git
-cd Portfolio
-cp .env.example .env    # Configure database credentials
-```
-
-### 2. Start Infrastructure
-
-```bash
-docker-compose up -d    # PostgreSQL on localhost:5432
-```
-
-### 3. Launch Backend
-
-```bash
-cd backend
-./mvnw spring-boot:run
-# API available at http://localhost:8080
-# Swagger UI at http://localhost:8080/swagger-ui.html
-```
-
-### 4. Launch Frontend
-
-```bash
-cd frontend
+```powershell
+Set-Location frontend
+Set-Content -Path .env.local -Value 'VITE_API_URL=http://localhost:8080'
 npm install
 npm run dev
-# Application at http://localhost:5173
 ```
 
----
+Set-Content replaces that file; edit an existing .env.local instead if it contains other settings. Vite reads configuration from its frontend project directory. The API client also defaults to the local port-8080 backend when the variable is absent.
 
-## `> UI.screenshots`
+Use the address printed by Vite. If it differs from the allowed origin, review ALLOWED_ORIGINS. A root environment example is a reference, not an automatic loader for both processes.
 
-<!-- 
-  ┌──────────────────────────────────────────────────────┐
-  │  SCREENSHOT PLACEHOLDERS                             │
-  │  Replace the paths below with actual screenshots     │
-  │  after capturing them from the running application.  │
-  └──────────────────────────────────────────────────────┘
--->
+## API surface
 
-### Landing / Hero Section
-> _Screenshot pending — capture the hero section with glassmorphism terminal effect._
+| Method | Route | Behaviour |
+| --- | --- | --- |
+| GET | /api/profile | Profile ID 1, or 404 |
+| GET | /api/projects | Projects ordered by sort then ID |
+| GET | /api/skills | Skills ordered by sort then ID |
+| POST | /api/contact_messages | Validated message persistence; returns 201 on save |
 
-### Projects Gallery
-> _Screenshot pending — capture the project cards grid with hover animations._
+Contact fields require a non-blank name of at least two characters, an email-shaped value and a non-blank message of at least ten characters. No maximum field lengths or application-level rate limiter are supplied in these paths. See [SECURITY.md](SECURITY.md) before public deployment.
 
-### Skills Matrix
-> _Screenshot pending — capture the skills section with category grouping._
+## Checks
 
-### Contact Form
-> _Screenshot pending — capture the contact form with validation states._
+From backend/:
 
-### Mobile Responsive View
-> _Screenshot pending — capture mobile viewport rendering._
-
----
-
-## `> STACK.tech_breakdown`
-
-| Layer               | Technology              | Version |
-|---------------------|-------------------------|---------|
-| **Language**        | Java                    | 21      |
-| **Framework**       | Spring Boot             | 3.2.4   |
-| **ORM**             | Spring Data JPA         | —       |
-| **Validation**      | Jakarta Bean Validation | —       |
-| **API Docs**        | SpringDoc OpenAPI       | 2.5.0   |
-| **Frontend**        | React                   | 19      |
-| **Build Tool**      | Vite                    | 7       |
-| **Styling**         | Tailwind CSS            | v4      |
-| **Animation**       | Framer Motion           | 12      |
-| **Routing**         | React Router            | v7      |
-| **Database**        | PostgreSQL              | 16      |
-| **Cloud DB**        | Neon Serverless         | —       |
-| **CI/CD**           | GitHub Actions          | —       |
-| **Frontend Deploy** | Vercel                  | —       |
-| **Backend Deploy**  | Render                  | —       |
-
----
-
-## `> SYS.contributing`
-
-Contributions are welcome. Please read the [Contributing Guide](./CONTRIBUTING.md) before submitting changes.
-
----
-
-## `> SYS.license`
-
-This project is licensed under the **MIT License**. See [LICENSE](./LICENSE) for details.
-
-```
-Copyright (c) 2026 Srun Sochettra
+```sh
+mvn test
+mvn clean package
 ```
 
----
+From frontend/:
 
-<div align="center">
-
+```sh
+npm run typecheck
+npm run lint
+npm run build
 ```
-[ ENGINEERED WITH PRECISION · DEPLOYED WITH PURPOSE ]
-```
 
-</div>
+The source contains 22 backend test methods across four test classes. These are test definitions, not fresh passing results. They do not verify PostgreSQL integration, email delivery or browser behaviour. No frontend test script is supplied.
 
+CI builds the backend with tests skipped and builds the frontend without separate lint/typecheck steps. Its npm ci step also depends on a lockfile not included in this export. A workflow file is not proof of a successful run.
+
+## Before publishing
+
+- **Review recording scripts:** frontend/index.html includes interaction/session recording, a third-party page-view request and cross-window message handlers. This documentation does not remove them or establish consent, masking or safe origin handling.
+- **Review content:** seed records and hard-coded UI text contain older academic/project descriptions. Skill percentages are authored display values, not measured proficiency.
+- **Check failure states:** initial fetches do not check response status before parsing. API failures can produce empty sections or invalid profile data rather than a useful retry state.
+- **Verify database mapping:** JSONB conversion and sample data need a real PostgreSQL round-trip test. A project-ID-specific fallback can mask missing technology data.
+- **Check accessibility:** the hero has partial reduced-motion handling, but canvas noise, project tilt and other animation paths are not globally disabled. No accessibility-conformance claim is made.
+
+Read [implementation notes](docs/implementation-notes.md) for the bounded source review. The Vercel config and backend Dockerfile are deployment scaffolding, not evidence of a current deployment or end-to-end release verification.
+
+## Contributing and licence
+
+See [CONTRIBUTING.md](CONTRIBUTING.md). Source is distributed under the existing [MIT License](LICENSE), copyright 2026 Srun Sochettra. No source, configuration or licence changes are included in this documentation overlay.
